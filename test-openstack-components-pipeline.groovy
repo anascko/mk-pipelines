@@ -57,7 +57,7 @@ node {
                 [$class: 'StringParameterValue', name: 'OPENSTACK_API_PROJECT', value: 'mcp-oscore'],
                 [$class: 'StringParameterValue', name: 'STACK_TEST', value: ''],
                 [$class: 'BooleanParameterValue', name: 'TEST_DOCKER_INSTALL', value: false],
-                [$class: 'TextParameterValue', name: 'SALT_OVERRIDES', value: salt_overrides_list.join('\n')]
+                [$class: 'TextParameterValue', name: 'SALT_OVERRIDES', value: salt_overrides_list.join('\n')],
             ])
         }
     
