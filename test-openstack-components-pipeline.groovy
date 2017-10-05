@@ -56,6 +56,7 @@ node {
             deployBuild = build(job: STACK_DEPLOY_JOB, parameters: [
                 [$class: 'StringParameterValue', name: 'OPENSTACK_API_PROJECT', value: 'mcp-oscore'],
                 [$class: 'StringParameterValue', name: 'STACK_TEST', value: ''],
+                [$class: 'StringParameterValue', name: 'HEAT_STACK_ZONE', value: HEAT_STACK_ZONE],
                 [$class: 'BooleanParameterValue', name: 'TEST_DOCKER_INSTALL', value: false],
                 [$class: 'TextParameterValue', name: 'SALT_OVERRIDES', value: salt_overrides_list.join('\n')],
             ])
