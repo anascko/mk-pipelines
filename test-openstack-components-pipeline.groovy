@@ -58,6 +58,7 @@ node {
                 [$class: 'StringParameterValue', name: 'STACK_TEST', value: ''],
                 [$class: 'StringParameterValue', name: 'HEAT_STACK_ZONE', value: HEAT_STACK_ZONE],
                 [$class: 'BooleanParameterValue', name: 'TEST_DOCKER_INSTALL', value: false],
+                [$class: 'BooleanParameterValue', name: 'STACK_DELETE', value: false],
                 [$class: 'TextParameterValue', name: 'SALT_OVERRIDES', value: salt_overrides_list.join('\n')],
             ])
         }
