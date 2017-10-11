@@ -32,7 +32,7 @@ node {
 
         if (common.validInputParam('GERRIT_CHANGE_NUMBER')) {
             revievNumber = "${GERRIT_CHANGE_NUMBER}"
-            extra_repo = "deb [ arch=amd64 trusted=yes ]  http://perestroika-repo-tst.infra.mirantis.net/review/CR-${revievNumber}/mcp-repos/ocata/xenial  ocata main/"
+            extra_repo = "deb [ arch=amd64 trusted=yes ]  http://perestroika-repo-tst.infra.mirantis.net/review/CR-${revievNumber}/mcp-repos/ocata/xenial  ocata main"
         }
 
         // Setting extra repo
