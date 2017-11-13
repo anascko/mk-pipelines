@@ -14,9 +14,9 @@
 def mkCommon = new com.mirantis.mk.Common()
 artifactory = new com.mirantis.mcp.MCPArtifactory()
 
-def gerrit = new com.mirantis.mk.Gerrit()
-def git = new com.mirantis.mk.Git()
-def dockerLib = new com.mirantis.mk.Docker()
+#def gerrit = new com.mirantis.mk.Gerrit()
+#def git = new com.mirantis.mk.Git()
+#def dockerLib = new com.mirantis.mk.Docker()
 
 def built_image
 def docker_dev_repo = 'docker-dev-local'
@@ -27,7 +27,7 @@ def git_credentials_id = "${env.GIT_CREDS_ID}"
 
 def docker_registry = "${env.DOCKER_REGISTRY}"
 def docker_context = '.'
-def docker_image_name = "${env.IMAGE_NAME}".split('/')[-1]   #local_image_name
+def docker_image_name = "${env.IMAGE_NAME}"   #local_image_name
 def docker_image_tag = "${env.IMAGE_TAG}"
 
 // Guess username for acessing git repo
