@@ -48,6 +48,7 @@ if (env.GERRIT_CHANGE_URL) {
 node('docker') {
 
     stage('SCM checkout') {
+        echo "Checking out git repository from ${GIT_URL} @ ${GIT_REF}"
         def project = 'mcp/' + GIT_URL.split('/')[-1]
         def host = 'gerrit.mcp.mirantis.net'
         git.gitSSHCheckout([
@@ -56,6 +57,7 @@ node('docker') {
           host : host,
           project : project,
           withWipeOut : true,
+          refspec: GIT_REF,
         ])
     }
     
