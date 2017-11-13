@@ -56,7 +56,6 @@ node('docker') {
           host : host,
           project : project,
           withWipeOut : true,
-          refspec : ,
         ])
     }
 
