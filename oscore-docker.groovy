@@ -58,8 +58,11 @@ node('docker') {
           withWipeOut : true,
         ])
     }
-
-    // Build image
+    
+     //
+    // Build image docker
+    //
+    
     stage('Build ' + IMAGE_NAME.split('/')[-1]) {
         def docker_args = [
             '--pull',
@@ -72,7 +75,9 @@ node('docker') {
         )
     }
 
+    //
     // Push image to registry
+    //
     if (env.DOCKER_REGISTRY) {
         stage('Push ' + IMAGE_NAME.split('/')[-1]) {
             artifactory.uploadImageToArtifactory(
