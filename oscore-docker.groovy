@@ -53,11 +53,11 @@ node('docker') {
         def host = 'gerrit.mcp.mirantis.net'
         git.gitSSHCheckout([
           credentialsId : GIT_CREDS_ID,
-          branch : GIT_URL,
+          branch : GIT_REF,
           host : host,
           project : project,
           withWipeOut : true,
-          refspec: GIT_REF,
+//          refspec: GIT_REF,
         ])
     }
     
