@@ -15,6 +15,8 @@ def git = new com.mirantis.mcp.Git()
 def built_image
 def docker_dev_repo = 'docker-dev-local'
 def docker_context = '.'
+def docker_image_name = IMAGE_NAME.tokenize('/').last()
+def project_name_short = 'mcp/' + GIT_URL.tokenize('/').last()
 
 // Guess username for acessing git repo
 def git_user=''
@@ -48,24 +50,18 @@ if (env.GERRIT_CHANGE_URL) {
 node('docker') {
 
     stage('SCM checkout') {
-        echo "Checking out git repository from ${GIT_URL} @ ${GIT_REF}"
-        def project = 'mcp/' + GIT_URL.split('/')[-1]
         def host = 'gerrit.mcp.mirantis.net'
         git.gitSSHCheckout([
           credentialsId : GIT_CREDS_ID,
           branch : GIT_REF,
           host : host,
-          project : project,
+          project : project_name_short,
           withWipeOut : true,
-//          refspec: GIT_REF,
         ])
     }
-    
-     //
-    // Build image docker
-    //
-    
-    stage('Build ' + IMAGE_NAME.split('/')[-1]) {
+
+    // Build image
+    stage('Build ' + docker_image_name) {
         def docker_args = [
             '--pull',
             '--no-cache',
@@ -77,11 +73,9 @@ node('docker') {
         )
     }
 
-    //
     // Push image to registry
-    //
     if (env.DOCKER_REGISTRY) {
-        stage('Push ' + IMAGE_NAME.split('/')[-1]) {
+        stage('Push ' + docker_image_name) {
             artifactory.uploadImageToArtifactory(
                 artifactoryServer,
                 DOCKER_REGISTRY,
