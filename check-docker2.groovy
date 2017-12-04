@@ -14,12 +14,12 @@ salt = new com.mirantis.mk.Salt()
 test = new com.mirantis.mk.Test()
 
 //def salt_overrides_list = SALT_OVERRIDES.tokenize('\n')
-def target = 'TEST_TEMPEST_TARGET'
-def dockerImageLink = 'TEST_TEMPEST_IMAGE'
+def target = env.TEST_TEMPEST_TARGET
+def dockerImageLink = env.TEST_TEMPEST_IMAGE
 //node(docker) {
      
     stage ('Connect to salt master') {
-        saltMaster = salt.connection(SALT_MATER_URL, SALT_MASTER_CREDENTIALS)
+        saltMaster = salt.connection(env.SALT_MATER_URL, env.SALT_MASTER_CREDENTIALS)
     }
         
     if (common.checkContains('TEST_DOCKER_INSTALL', 'true')) {
