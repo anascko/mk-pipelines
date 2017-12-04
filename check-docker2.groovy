@@ -14,7 +14,8 @@ salt = new com.mirantis.mk.Salt()
 test = new com.mirantis.mk.Test()
 
 //def salt_overrides_list = SALT_OVERRIDES.tokenize('\n')
-
+def target = 'TEST_TEMPEST_TARGET'
+def dockerImageLink = 'TEST_TEMPEST_IMAGE'
 //node(docker) {
      
     stage ('Connect to salt master') {
@@ -26,7 +27,7 @@ test = new com.mirantis.mk.Test()
     }
 
     stage ('Check docker image and run smoke test') {
-        tempest_stdout = salt.cmdRun(saltMaster, "${target}", "docker run --rm --net=host " +
+        salt.cmdRun(saltMaster, "${target}", "docker run --rm --net=host " +
                                     "-v /root/:/home/tests " +
                                     "${dockerImageLink} " +
                                     "--regex smoke >> docker-tempest.log")
