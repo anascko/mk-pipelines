@@ -23,11 +23,6 @@
  *   RUN_JOB_TO_TEST                    Job for launching tests
  *   STACK_TYPE                        Environment type (heat, physical, kvm)
  *   STACK_INSTALL                     Which components of the stack to install
- *   TEST_TEMPEST_CONF                 Tempest configuration file path inside container
- *   TEST_TEMPEST_TARGET               Salt target for tempest tests
- *   TEST_TEMPEST_PATTERN              Tempest tests pattern
- *   TEST_MILESTONE                    MCP version
- *   TEST_MODEL                        Reclass model of environment
  *   TEST_PASS_THRESHOLD               Persent of passed tests to consider build successful
  *   TEST_TEMPEST_IMAGE		       Docker image to test
  *
