@@ -16,6 +16,8 @@ test = new com.mirantis.mk.Test()
 //def salt_overrides_list = SALT_OVERRIDES.tokenize('\n')
 def target = env.TEST_TEMPEST_TARGET
 def dockerImageLink = env.TEST_TEMPEST_IMAGE
+// def pattern = '--regex smoke'
+def pattern = '--regex designate_tempest_plugin.tests.api'
 //node(docker) {
      
     stage ('Connect to salt master') {
@@ -30,7 +32,7 @@ def dockerImageLink = env.TEST_TEMPEST_IMAGE
         salt.cmdRun(saltMaster, "${target}", "docker run --rm --net=host " +
                                     "-v /root/:/home/tests " +
                                     "${dockerImageLink} " +
-                                    "--regex smoke >> docker-tempest.log")
+                    "${pattern} >> docker-tempest.log")
                   
     }
 //}
