@@ -14,11 +14,8 @@ salt = new com.mirantis.mk.Salt()
 python = new com.mirantis.mk.Python()
 
 //def salt_overrides_list = SALT_OVERRIDES.tokenize('\n')
-def build_result = 'FAILURE'
-def slave_node = 'python'
-def dockerImageLink= 'TEST_TEMPEST_IMAGE'
 
-node(slave_node) {
+node(python) {
     def deployBuild
     def salt_master_url
     def stack_name
@@ -26,31 +23,24 @@ node(slave_node) {
     def node_name = slave_node
     def use_pepper = true
 
-    try {
-
-        stage ('Connect to salt master') {
-            if (use_pepper) {
-                python.setupPepperVirtualenv(venv, SALT_MATER_URL, SALT_MASTER_CREDENTIALS, true)
-                saltMaster = venv
-            } else {
-                saltMaster = salt.connection(SALT_MATER_URL, SALT_MASTER_CREDENTIALS)
-            }
+    stage ('Connect to salt master') {
+        if (use_pepper) {
+            python.setupPepperVirtualenv(venv, SALT_MATER_URL, SALT_MASTER_CREDENTIALS, true)
+            saltMaster = venv
+        } else {
+            saltMaster = salt.connection(SALT_MATER_URL, SALT_MASTER_CREDENTIALS)
         }
+    }
         
-        if (common.checkContains('TEST_DOCKER_INSTALL', 'true')) {
-            test.install_docker(saltMaster, TEST_TEMPEST_TARGET)
-        }
+    if (common.checkContains('TEST_DOCKER_INSTALL', 'true')) {
+        test.install_docker(saltMaster, TEST_TEMPEST_TARGET)
+    }
 
-        stage ('Check docker image and run smoke test') {
-
-            tempest_stdout = salt.cmdRun(master, "${target}", "docker run --rm --net=host " +
+    stage ('Check docker image and run smoke test') {
+        tempest_stdout = salt.cmdRun(master, "${target}", "docker run --rm --net=host " +
                                     "-v /root/:/home/tests " +
                                     "${dockerImageLink} " +
                                     "--regex smoke >> docker-tempest.log")
                   
-        }
-    }catch (Exception e) {
-        currentBuild.result = 'FAILURE'
-        throw e
     }
 }
