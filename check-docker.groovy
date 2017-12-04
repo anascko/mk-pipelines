@@ -9,14 +9,7 @@
  * 
  *
  * Flow parameters:
- *   EXTRA_REPO                        Repository with additional packages
- *   REPO_URL                          URL to temporary repository with tested packages
- *   EXTRA_REPO_PIN                    Pin string for extra repo - eg "origin hostname.local"
- *   EXTRA_REPO_PRIORITY               Repo priority
- *   FAIL_ON_TESTS                     Whether to fail build on tests failures or not
- *   FORMULA_PKG_REVISION              Formulas release to deploy with (stable, testing or nightly)
  *   HEAT_STACK_ZONE                   VM availability zone
- *   OPENSTACK_VERSION                 Version of Openstack being tested
  *   OPENSTACK_API_URL                 OpenStack API address
  *   OPENSTACK_API_CREDENTIALS         Credentials to the OpenStack API
  *   OPENSTACK_API_PROJECT             OpenStack project to connect to
@@ -25,10 +18,9 @@
  *   OPENSTACK_API_USER_DOMAIN         OpenStack user domain
  *   OPENSTACK_API_CLIENT              Versions of OpenStack python clients
  *   OPENSTACK_API_VERSION             Version of the OpenStack API (2/3)
- *   PROJECT                           Name of project being tested
  *   SALT_OVERRIDES                    Override reclass model parameters
  *   STACK_DELETE                      Whether to cleanup created stack
- *   STACK_TEST_JOB                    Job for launching tests
+ *   RUN_JOB_TO_TEST                    Job for launching tests
  *   STACK_TYPE                        Environment type (heat, physical, kvm)
  *   STACK_INSTALL                     Which components of the stack to install
  *   TEST_TEMPEST_CONF                 Tempest configuration file path inside container
@@ -37,31 +29,20 @@
  *   TEST_MILESTONE                    MCP version
  *   TEST_MODEL                        Reclass model of environment
  *   TEST_PASS_THRESHOLD               Persent of passed tests to consider build successful
+ *   TEST_TEMPEST_IMAGE		       Docker image to test
  *
  **/
-
-
-RUN_JOB_TO_TEST 
-TEST_TEMPEST_IMAGE
 
 common = new com.mirantis.mk.Common()
 salt = new com.mirantis.mk.Salt()
 python = new com.mirantis.mk.Python()
 
-def artifactoryServer = Artifactory.server('mcp-ci')
-def artifactoryUrl = artifactoryServer.getUrl()
 def salt_overrides_list = SALT_OVERRIDES.tokenize('\n')
-def build_disabled = 'disable-deploy-test'
 def build_result = 'FAILURE'
 def slave_node = 'python'
 def dockerImageLink= 'TEST_TEMPEST_IMAGE'
 
 node(slave_node) {
-    def project = PROJECT
-    def extra_repo = EXTRA_REPO
-    def testrail = true
-    def test_milestone = ''
-    def stack_deploy_job = "deploy-${STACK_TYPE}-${TEST_MODEL}-debug"
     def deployBuild
     def salt_master_url
     def stack_name
@@ -69,8 +50,7 @@ node(slave_node) {
     def node_name = slave_node
 
     try {
-   
-        // Deploy MCP environment
+         // Deploy MCP environment
         stage('Trigger deploy job') {
             deployBuild = build(job: RUN_JOB_TO_TEST, propagate: false, parameters: [
                 [$class: 'StringParameterValue', name: 'OPENSTACK_API_PROJECT', value: OPENSTACK_API_PROJECT],
@@ -86,8 +66,7 @@ node(slave_node) {
         // get salt master url
         salt_master_url = "http://${deployBuild.description.tokenize(' ')[1]}:6969"
         common.infoMsg("Salt API is accessible via ${salt_master_url}")
-        }
-
+        
         // Try to set stack name for stack cleanup job
         if (deployBuild.description) {
             stack_name = deployBuild.description.tokenize(' ')[0]
@@ -104,13 +83,20 @@ node(slave_node) {
                 saltMaster = salt.connection(salt_master_url, SALT_MASTER_CREDENTIALS)
             }
         }
-
+        
         if (common.checkContains('TEST_DOCKER_INSTALL', 'true')) {
             test.install_docker(saltMaster, TEST_TEMPEST_TARGET)
         }
 
-		tempest_stdout = salt.cmdRun(master, "${target}", "docker run --rm --net=host " +
+        stage ('Check docker image and run smoke test') {
+
+        tempest_stdout = salt.cmdRun(master, "${target}", "docker run --rm --net=host " +
                                     "-v /root/:/home/tests " +
                                     "${dockerImageLink} " +
-									"--regex smoke >> docker-tempest.log")
+                                    "--regex smoke >> docker-tempest.log")
+
+      
+        }
+    }
+
 }
