@@ -15,7 +15,7 @@ test = new com.mirantis.mk.Test()
 
 //def salt_overrides_list = SALT_OVERRIDES.tokenize('\n')
 
-node(docker) {
+//node(docker) {
      
     stage ('Connect to salt master') {
         saltMaster = salt.connection(SALT_MATER_URL, SALT_MASTER_CREDENTIALS)
@@ -32,4 +32,4 @@ node(docker) {
                                     "--regex smoke >> docker-tempest.log")
                   
     }
-}
+//}
