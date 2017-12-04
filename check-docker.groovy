@@ -90,12 +90,11 @@ node(slave_node) {
 
         stage ('Check docker image and run smoke test') {
 
-        tempest_stdout = salt.cmdRun(master, "${target}", "docker run --rm --net=host " +
+            tempest_stdout = salt.cmdRun(master, "${target}", "docker run --rm --net=host " +
                                     "-v /root/:/home/tests " +
                                     "${dockerImageLink} " +
                                     "--regex smoke >> docker-tempest.log")
-
-      
+  
         }
     }
 
