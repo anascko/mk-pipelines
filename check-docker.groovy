@@ -37,7 +37,7 @@ common = new com.mirantis.mk.Common()
 salt = new com.mirantis.mk.Salt()
 python = new com.mirantis.mk.Python()
 
-def salt_overrides_list = SALT_OVERRIDES.tokenize('\n')
+//def salt_overrides_list = SALT_OVERRIDES.tokenize('\n')
 def build_result = 'FAILURE'
 def slave_node = 'python'
 def dockerImageLink= 'TEST_TEMPEST_IMAGE'
@@ -60,7 +60,6 @@ node(slave_node) {
                 [$class: 'StringParameterValue', name: 'STACK_TYPE', value: STACK_TYPE],
                 [$class: 'StringParameterValue', name: 'FORMULA_PKG_REVISION', value: formula_pkg_revision],
                 [$class: 'BooleanParameterValue', name: 'STACK_DELETE', value: false],
-                [$class: 'TextParameterValue', name: 'SALT_OVERRIDES', value: salt_overrides_list.join('\n')],
             ])
         }
         // get salt master url
