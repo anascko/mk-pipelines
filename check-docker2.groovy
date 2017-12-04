@@ -12,20 +12,15 @@
 common = new com.mirantis.mk.Common()
 salt = new com.mirantis.mk.Salt()
 test = new com.mirantis.mk.Test()
+python = new com.mirantis.mk.Python()
 
 //def salt_overrides_list = SALT_OVERRIDES.tokenize('\n')
 
 node(python) {
     def deployBuild
-    def salt_master_url
-    def stack_name
-    def formula_pkg_revision = 'stable'
-    def node_name = slave_node
-    def use_pepper = true
-    def venv = "${env.WORKSPACE}/venv"
-    
+        
     stage ('Connect to salt master') {
-        saltMaster = salt.connection(SALT_MATER_URL, SALT_MASTER_CREDENTIALS)
+        saltMaster = salt.connection(SALT_MATER_URL)
     }
         
     if (common.checkContains('TEST_DOCKER_INSTALL', 'true')) {
@@ -33,7 +28,7 @@ node(python) {
     }
 
     stage ('Check docker image and run smoke test') {
-        tempest_stdout = salt.cmdRun(master, "${target}", "docker run --rm --net=host " +
+        tempest_stdout = salt.cmdRun(saltMaster, "${target}", "docker run --rm --net=host " +
                                     "-v /root/:/home/tests " +
                                     "${dockerImageLink} " +
                                     "--regex smoke >> docker-tempest.log")
