@@ -11,7 +11,6 @@
 
 common = new com.mirantis.mk.Common()
 salt = new com.mirantis.mk.Salt()
-python = new com.mirantis.mk.Python()
 test = new com.mirantis.mk.Test()
 
 //def salt_overrides_list = SALT_OVERRIDES.tokenize('\n')
@@ -26,12 +25,7 @@ node(python) {
     def venv = "${env.WORKSPACE}/venv"
     
     stage ('Connect to salt master') {
-        if (use_pepper) {
-            python.setupPepperVirtualenv(venv, SALT_MATER_URL, SALT_MASTER_CREDENTIALS, true)
-            saltMaster = venv
-        } else {
-            saltMaster = salt.connection(SALT_MATER_URL, SALT_MASTER_CREDENTIALS)
-        }
+        saltMaster = salt.connection(SALT_MATER_URL, SALT_MASTER_CREDENTIALS)
     }
         
     if (common.checkContains('TEST_DOCKER_INSTALL', 'true')) {
