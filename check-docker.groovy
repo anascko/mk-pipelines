@@ -56,7 +56,6 @@ node(slave_node) {
                 [$class: 'StringParameterValue', name: 'OPENSTACK_API_PROJECT', value: OPENSTACK_API_PROJECT],
                 [$class: 'StringParameterValue', name: 'HEAT_STACK_ZONE', value: HEAT_STACK_ZONE],
                 [$class: 'StringParameterValue', name: 'STACK_INSTALL', value: STACK_INSTALL],
-                [$class: 'StringParameterValue', name: 'STACK_TEST', value: STACK_TEST],
                 [$class: 'StringParameterValue', name: 'STACK_TYPE', value: STACK_TYPE],
                 [$class: 'StringParameterValue', name: 'FORMULA_PKG_REVISION', value: formula_pkg_revision],
                 [$class: 'BooleanParameterValue', name: 'STACK_DELETE', value: false],
@@ -93,7 +92,7 @@ node(slave_node) {
                                     "-v /root/:/home/tests " +
                                     "${dockerImageLink} " +
                                     "--regex smoke >> docker-tempest.log")
-  
+                  [$class: 'StringParameterValue', name: 'STACK_TEST', value: STACK_TEST],
         }
     }catch (Exception e) {
         currentBuild.result = 'FAILURE'
