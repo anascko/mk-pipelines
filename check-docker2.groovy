@@ -12,7 +12,6 @@
 common = new com.mirantis.mk.Common()
 salt = new com.mirantis.mk.Salt()
 test = new com.mirantis.mk.Test()
-python = new com.mirantis.mk.Python()
 
 //def salt_overrides_list = SALT_OVERRIDES.tokenize('\n')
 
