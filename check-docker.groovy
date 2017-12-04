@@ -96,6 +96,8 @@ node(slave_node) {
                                     "--regex smoke >> docker-tempest.log")
   
         }
+    }catch (Exception e) {
+        currentBuild.result = 'FAILURE'
+        throw e
     }
-
 }
