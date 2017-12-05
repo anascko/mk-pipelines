@@ -5,25 +5,21 @@
  *  - Deployment of MCP environment with Openstack
  *  - Get ready created docker container
  *  - Executing Smoke tests - set of tests to check basic functionality
- *  - If somoke are passed image is OK
+ *  - If somoke are passed image is OK and if failed what need to do ?
  * 
  *
  * Flow parameters:
  *   HEAT_STACK_ZONE                   VM availability zone
  *   OPENSTACK_API_URL                 OpenStack API address
- *   OPENSTACK_API_CREDENTIALS         Credentials to the OpenStack API
  *   OPENSTACK_API_PROJECT             OpenStack project to connect to
- *   OPENSTACK_API_PROJECT_DOMAIN      OpenStack project domain to connect to
  *   OPENSTACK_API_PROJECT_ID          OpenStack project ID to connect to
- *   OPENSTACK_API_USER_DOMAIN         OpenStack user domain
- *   OPENSTACK_API_CLIENT              Versions of OpenStack python clients
- *   OPENSTACK_API_VERSION             Version of the OpenStack API (2/3)
- *   SALT_OVERRIDES                    Override reclass model parameters
+ *   SALT_MASTER_CREDENTIALS
+ *   TEST_DOCKER_INSTALL
  *   STACK_DELETE                      Whether to cleanup created stack
  *   RUN_JOB_TO_TEST                    Job for launching tests
  *   STACK_TYPE                        Environment type (heat, physical, kvm)
  *   STACK_INSTALL                     Which components of the stack to install
- *   TEST_PASS_THRESHOLD               Persent of passed tests to consider build successful
+ *   TEST_TEMPEST_TARGET
  *   TEST_TEMPEST_IMAGE		       Docker image to test
  *
  **/
