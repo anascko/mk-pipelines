@@ -30,12 +30,14 @@
 
 common = new com.mirantis.mk.Common()
 salt = new com.mirantis.mk.Salt()
-python = new com.mirantis.mk.Python()
+test = new com.mirantis.mk.Test()
 
 //def salt_overrides_list = SALT_OVERRIDES.tokenize('\n')
 def build_result = 'FAILURE'
 def slave_node = 'python'
-def dockerImageLink= 'TEST_TEMPEST_IMAGE'
+def target = env.TEST_TEMPEST_TARGET
+def dockerImageLink = env.TEST_TEMPEST_IMAGE
+def pattern = '--regex smoke'
 
 node(slave_node) {
     def deployBuild
@@ -70,12 +72,7 @@ node(slave_node) {
         }
 
         stage ('Connect to salt master') {
-            if (use_pepper) {
-                python.setupPepperVirtualenv(venv, salt_master_url, SALT_MASTER_CREDENTIALS, true)
-                saltMaster = venv
-            } else {
-                saltMaster = salt.connection(salt_master_url, SALT_MASTER_CREDENTIALS)
-            }
+            saltMaster = salt.connection(salt_master_url, env.SALT_MASTER_CREDENTIALS)
         }
         
         if (common.checkContains('TEST_DOCKER_INSTALL', 'true')) {
@@ -83,13 +80,12 @@ node(slave_node) {
         }
 
         stage ('Check docker image and run smoke test') {
-
-            tempest_stdout = salt.cmdRun(master, "${target}", "docker run --rm --net=host " +
+            salt.cmdRun(saltMaster, "${target}", "docker run --rm --net=host " +
                                     "-v /root/:/home/tests " +
                                     "${dockerImageLink} " +
-                                    "--regex smoke >> docker-tempest.log")
+                                    "${pattern} >> docker-tempest.log")
                   
-        }
+        }   
     }catch (Exception e) {
         currentBuild.result = 'FAILURE'
         throw e
